@@ -19,14 +19,29 @@ fun is_older(date1 : int*int*int, date2 : int*int*int) =
 (* return how many dates are from the given month *)
 fun number_in_month(dates : (int*int*int) list, month : int) =
   let
-    fun count(date : int*int*int) =
+    fun in_month(date : int*int*int) =
       if (#2 date) = month then 1
       else 0
-
-    fun count_all(xs : (int*int*int) list, sum : int) =
-      if null xs then sum
-      else count_all((tl xs), sum + count(hd xs))
   in
-    count_all(dates, 0)
+    if null dates then 0
+    else in_month(hd dates) + number_in_month((tl dates), month)
   end
+
+fun number_in_months(dates : (int*int*int) list, months : int list) =
+  if null months then 0
+  else number_in_month(dates, (hd months)) + number_in_months(dates, (tl
+  months))
+
+fun dates_in_month(dates : (int*int*int) list, month : int) =
+  let
+    fun in_month(date : int*int*int) = (#2 date) = month
+  in
+    if null dates then []
+    else if in_month(hd dates) then (hd dates) :: dates_in_month((tl dates), month)
+    else dates_in_month((tl dates), month)
+  end
+
+fun dates_in_months(dates : (int*int*int) list, months : int list) =
+  if null months then []
+  else dates_in_month(dates, (hd months)) @ dates_in_months(dates, (tl months))
 
