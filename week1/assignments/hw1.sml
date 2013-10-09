@@ -27,11 +27,13 @@ fun number_in_month(dates : (int*int*int) list, month : int) =
     else in_month(hd dates) + number_in_month((tl dates), month)
   end
 
+(* return how many dates are from the given months *)
 fun number_in_months(dates : (int*int*int) list, months : int list) =
   if null months then 0
   else number_in_month(dates, (hd months)) + number_in_months(dates, (tl
   months))
 
+(* return the dates that belong to the month *)
 fun dates_in_month(dates : (int*int*int) list, month : int) =
   let
     fun in_month(date : int*int*int) = (#2 date) = month
@@ -41,10 +43,12 @@ fun dates_in_month(dates : (int*int*int) list, month : int) =
     else dates_in_month((tl dates), month)
   end
 
+(* return the dates that belong in the given months *)
 fun dates_in_months(dates : (int*int*int) list, months : int list) =
   if null months then []
   else dates_in_month(dates, (hd months)) @ dates_in_months(dates, (tl months))
 
+(* return the nth item of the given list - or empty *)
 fun get_nth(strs : string list, n : int) =
   let
     fun index'(strs : string list, i : int) =
@@ -55,6 +59,7 @@ fun get_nth(strs : string list, n : int) =
     index'(strs, 1)
   end
 
+(* toString for dates  *)
 fun date_to_string(date : int*int*int) =
   let
     val months = ["January", "February", "March", "April", "May", "June",
@@ -63,3 +68,5 @@ fun date_to_string(date : int*int*int) =
     get_nth(months, (#2 date)) ^ " " ^ Int.toString(#3 date) ^
       ", " ^ Int.toString(#1 date)
   end
+
+
