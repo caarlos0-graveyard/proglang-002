@@ -69,4 +69,57 @@ fun date_to_string(date : int*int*int) =
       ", " ^ Int.toString(#1 date)
   end
 
+(* return how many itens of the given list will sum less than the num passed *)
+fun number_before_reaching_sum(num : int, xs : int list) =
+  let
+    fun sum(total : int, count : int, xss : int list) =
+      if null xss then count
+      else if (total + (hd xss)) >= num then count
+      else sum(total + (hd xss), count + 1, (tl xss))
+  in
+    sum(0, 0, xs)
+  end
+
+(* returns the month of the given day of the year *)
+fun what_month(day : int) =
+  let
+    val days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  in
+    number_before_reaching_sum(day, days) + 1
+  end
+
+(* for the two given days of year, return the list of each months between them
+* *)
+fun month_range(day1 : int, day2 : int) =
+  if day1 > day2 then []
+  else
+    let
+      fun r(lo, hi) =
+        if lo > hi then []
+        else lo :: r(lo + 1, hi)
+
+      fun d(xs) =
+        if null xs then []
+        else what_month(hd xs) :: d(tl xs)
+    in
+      d(r(day1, day2))
+    end
+
+(* return the oldest day in the days list *)
+fun oldest(days : (int*int*int) list) =
+  let
+    fun comp(day : int*int*int, xs : (int*int*int) list) =
+      if null xs then day
+      else
+        let
+          val h = hd xs
+          val t = tl xs
+        in
+          if is_older(day, h) then comp(day, t)
+          else comp(h, t)
+        end
+  in
+    if null days then NONE
+    else SOME(comp(hd days, tl days))
+  end
 
